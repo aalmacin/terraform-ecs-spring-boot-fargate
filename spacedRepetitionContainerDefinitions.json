@@ -1,0 +1,30 @@
+[
+  {
+    "name": "spaced-repetition-spring-boot",
+    "image": "${springBootECR}",
+    "cpu" : 512,
+    "memory" : 1024,
+    "essential": true,
+    "networkMode": "awsvpc",
+    "requires_compatibilities": ["FARGATE"],
+    "portMappings": [
+      {
+        "containerPort": 8080
+      }
+    ]
+  },
+  {
+    "name": "spaced-repetition-mysql",
+    "image": "${springBootMysqlECR}",
+    "cpu" : 512,
+    "memory" : 1024,
+    "essential": true,
+    "networkMode": "awsvpc",
+    "requires_compatibilities": ["FARGATE"],
+    "portMappings": [
+      {
+        "containerPort": 3306
+      }
+    ]
+  }
+]
