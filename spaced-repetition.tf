@@ -11,6 +11,13 @@ resource "aws_ecs_cluster" "spacedRepetitionECSCluster" {
   name = "SpacedRepetition"
 }
 
+resource "aws_ecs_service" "spacedRepetitionService" {
+  name = "website"
+  task_definition = "${aws_ecs_task_definition.spacedRepetitionTaskDefinition.arn}"
+  desired_count = 1
+  cluster = "${aws_ecs_cluster.spacedRepetitionECSCluster.arn}"
+}
+
 resource "aws_ecr_repository" "spacedRepetitionECR" {
   name = "spaced-repetition-spring-boot"
 }
