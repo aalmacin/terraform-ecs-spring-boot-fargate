@@ -5,7 +5,7 @@ resource "aws_lb" "spacedRepetitionLoadBalancer" {
   security_groups    = ["${aws_security_group.spacedRepetitionPublic.id}"]
   subnets            = ["${aws_subnet.spacedRepetitionSubnet.id}", "${aws_subnet.spacedRepetitionSubnet2.id}"]
 
-  enable_deletion_protection = true
+  enable_deletion_protection = false
 
   tags {
     Environment = "production"

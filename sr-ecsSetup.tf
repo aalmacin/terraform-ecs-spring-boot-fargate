@@ -32,6 +32,11 @@ resource "aws_ecs_service" "spacedRepetitionService" {
       ]
     }
 	]
+
+  depends_on = [
+    "aws_lb_listener.spacedRepetitionSiteHttpListener",
+    "aws_lb_listener.spacedRepetitionSiteHttpsListener"
+  ]
 }
 
 resource "aws_ecr_repository" "spacedRepetitionECR" {

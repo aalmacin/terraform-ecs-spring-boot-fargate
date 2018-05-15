@@ -6,6 +6,14 @@ resource "aws_vpc" "spacedRepetition" {
   }
 }
 
+resource "aws_internet_gateway" "internetGateway" {
+  vpc_id = "${aws_vpc.spacedRepetition.id}"
+
+  tags {
+    Name = "main"
+  }
+}
+
 resource "aws_subnet" "spacedRepetitionSubnet2" {
   vpc_id = "${aws_vpc.spacedRepetition.id}"
   availability_zone = "us-east-1b"

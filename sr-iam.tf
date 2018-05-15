@@ -8,7 +8,7 @@ resource "aws_iam_role_policy" "ecsExecutionRole" {
   "Statement": [
     {
       "Action": [
-        "ec2:Describe*"
+        "*"
       ],
       "Effect": "Allow",
       "Resource": "*"
@@ -28,7 +28,7 @@ resource "aws_iam_role" "executionRole" {
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "Service": "ec2.amazonaws.com"
+        "Service": "ecs.amazonaws.com"
       },
       "Effect": "Allow",
       "Sid": ""
