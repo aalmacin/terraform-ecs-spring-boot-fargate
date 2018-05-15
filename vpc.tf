@@ -6,6 +6,16 @@ resource "aws_vpc" "spacedRepetition" {
   }
 }
 
+resource "aws_subnet" "spacedRepetitionSubnet2" {
+  vpc_id = "${aws_vpc.spacedRepetition.id}"
+  availability_zone = "us-east-1b"
+  cidr_block = "10.0.2.0/24"
+
+  tags {
+    Name = "Public Subnet 2"
+  }
+}
+
 resource "aws_subnet" "spacedRepetitionSubnet" {
   vpc_id = "${aws_vpc.spacedRepetition.id}"
   availability_zone = "us-east-1a"

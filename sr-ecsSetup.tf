@@ -16,6 +16,8 @@ resource "aws_ecs_service" "spacedRepetitionService" {
   task_definition = "${aws_ecs_task_definition.spacedRepetitionTaskDefinition.arn}"
   desired_count = 1
   cluster = "${aws_ecs_cluster.spacedRepetitionECSCluster.arn}"
+  load_balancer = []
+  network_configuration = []
 }
 
 resource "aws_ecr_repository" "spacedRepetitionECR" {
@@ -38,3 +40,4 @@ output "ecr-spring-boot" {
 output "ecr-mysql" {
   value = "${aws_ecr_repository.spacedRepetitionMysqlECR.repository_url}"
 }
+
