@@ -16,7 +16,14 @@ resource "aws_ecs_service" "spacedRepetitionService" {
   task_definition = "${aws_ecs_task_definition.spacedRepetitionTaskDefinition.arn}"
   desired_count = 1
   cluster = "${aws_ecs_cluster.spacedRepetitionECSCluster.arn}"
-  load_balancer = []
+
+  load_balancer = {
+    target_group_arn = "${aws_lb_target_group.springBootContainer.arn}"
+    container_name = "spaced-repetition-spring-boot"
+    container_port = 8080
+  }
+
+  launch_type = "FARGATE"
   network_configuration = [
     {
       subnets = [

@@ -12,10 +12,22 @@ resource "aws_lb" "spacedRepetitionLoadBalancer" {
   }
 }
 
-resource "aws_lb_target_group" "loadBalancerHttpsTargetGroup" {
-  port = 443
-  protocol = "HTTPS"
+resource "aws_lb_target_group" "springBootContainer" {
+  port = 8080
+  protocol = "HTTP"
   vpc_id = "${aws_vpc.spacedRepetition.id}"
+  target_type = "ip"
+}
+
+resource "aws_lb_listener" "spacedRepetitionSiteHttpListener" {
+  load_balancer_arn = "${aws_lb.spacedRepetitionLoadBalancer.arn}"
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    target_group_arn = "${aws_lb_target_group.springBootContainer.arn}"
+    type             = "forward"
+  }
 }
 
 resource "aws_lb_listener" "spacedRepetitionSiteHttpsListener" {
@@ -26,25 +38,7 @@ resource "aws_lb_listener" "spacedRepetitionSiteHttpsListener" {
   certificate_arn   = "${aws_acm_certificate_validation.certificateValidation.certificate_arn}"
 
   default_action {
-    target_group_arn = "${aws_lb_target_group.loadBalancerHttpsTargetGroup.arn}"
+    target_group_arn = "${aws_lb_target_group.springBootContainer.arn}"
     type             = "forward"
   }
 }
-
-resource "aws_lb_target_group" "loadBalancerHttpTargetGroup" {
-  port = 80
-  protocol = "HTTP"
-  vpc_id = "${aws_vpc.spacedRepetition.id}"
-}
-
-resource "aws_lb_listener" "spacedRepetitionSiteHttpListener" {
-  load_balancer_arn = "${aws_lb.spacedRepetitionLoadBalancer.arn}"
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    target_group_arn = "${aws_lb_target_group.loadBalancerHttpTargetGroup.arn}"
-    type             = "forward"
-  }
-}
-
