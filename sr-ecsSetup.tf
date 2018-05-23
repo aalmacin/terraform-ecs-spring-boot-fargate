@@ -36,8 +36,7 @@ resource "aws_ecs_service" "spacedRepetitionService" {
 
   depends_on = [
     "aws_lb_listener.spacedRepetitionSiteHttpListener",
-    "aws_lb_listener.spacedRepetitionSiteHttpsListener",
-    "aws_iam_service_linked_role.executionServiceRole"
+    "aws_lb_listener.spacedRepetitionSiteHttpsListener"
   ]
 }
 
@@ -53,7 +52,7 @@ resource "aws_ecs_task_definition" "spacedRepetitionTaskDefinition" {
   family = "SpacedRepetition"
   container_definitions = "${data.template_file.containers.rendered}"
   network_mode = "awsvpc"
-  execution_role_arn = "${aws_iam_service_linked_role.executionServiceRole.arn}"
+  execution_role_arn = "${aws_iam_role.executionRole.arn}"
   cpu = 1024
   memory = 2048
   requires_compatibilities = ["FARGATE"]
