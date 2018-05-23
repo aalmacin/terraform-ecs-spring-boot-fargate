@@ -1,5 +1,5 @@
 data "template_file" "containers" {
-  template = "${file("spacedRepetitionContainerDefinitions.json")}"
+  template = "${file("appContainerDefinitions.json")}"
 
   vars {
     "springBootECR" = "${aws_ecr_repository.spacedRepetitionECR.repository_url}"
