@@ -6,7 +6,9 @@
       "Principal": {
         "Service": [
           "ecs.amazonaws.com",
-          "ec2.amazonaws.com"
+          "ec2.amazonaws.com",
+          "elasticloadbalancing.amazonaws.com",
+          "ecs-tasks.amazonaws.com"
         ]
       },
       "Action": "sts:AssumeRole"

@@ -40,14 +40,6 @@ resource "aws_ecs_service" "spacedRepetitionService" {
   ]
 }
 
-resource "aws_ecr_repository" "spacedRepetitionECR" {
-  name = "spaced-repetition-spring-boot"
-}
-
-resource "aws_ecr_repository" "spacedRepetitionMysqlECR" {
-  name = "spaced-repetition-mysql"
-}
-
 resource "aws_ecs_task_definition" "spacedRepetitionTaskDefinition" {
   family = "SpacedRepetition"
   container_definitions = "${data.template_file.containers.rendered}"
@@ -66,3 +58,76 @@ output "ecr-mysql" {
   value = "${aws_ecr_repository.spacedRepetitionMysqlECR.repository_url}"
 }
 
+resource "aws_ecr_repository" "spacedRepetitionECR" {
+  name = "spaced-repetition-spring-boot"
+}
+
+resource "aws_ecr_repository" "spacedRepetitionMysqlECR" {
+  name = "spaced-repetition-mysql"
+}
+
+resource "aws_ecr_repository_policy" "spacedRepetitionECRPolicy" {
+  repository = "${aws_ecr_repository.spacedRepetitionECR.name}"
+
+  policy = <<EOF
+{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Sid": "new policy",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": [
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:PutImage",
+                "ecr:InitiateLayerUpload",
+                "ecr:UploadLayerPart",
+                "ecr:CompleteLayerUpload",
+                "ecr:DescribeRepositories",
+                "ecr:GetRepositoryPolicy",
+                "ecr:ListImages",
+                "ecr:DeleteRepository",
+                "ecr:BatchDeleteImage",
+                "ecr:SetRepositoryPolicy",
+                "ecr:DeleteRepositoryPolicy"
+            ]
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_ecr_repository_policy" "spacedRepetitionMysqlECRPolicy" {
+  repository = "${aws_ecr_repository.spacedRepetitionMysqlECR.name}"
+
+  policy = <<EOF
+{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Sid": "new policy",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": [
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:PutImage",
+                "ecr:InitiateLayerUpload",
+                "ecr:UploadLayerPart",
+                "ecr:CompleteLayerUpload",
+                "ecr:DescribeRepositories",
+                "ecr:GetRepositoryPolicy",
+                "ecr:ListImages",
+                "ecr:DeleteRepository",
+                "ecr:BatchDeleteImage",
+                "ecr:SetRepositoryPolicy",
+                "ecr:DeleteRepositoryPolicy"
+            ]
+        }
+    ]
+}
+EOF
+}
