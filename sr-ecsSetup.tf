@@ -4,7 +4,7 @@ data "template_file" "containers" {
   vars {
     "springBootECR" = "${aws_ecr_repository.springBootECR.repository_url}"
     "springBootMysqlECR" = "${aws_ecr_repository.mysqlECR.repository_url}"
-    "repositoryName" = "spacedRepetition"
+    "repositoryName" = "${var.appName}"
   }
 }
 
@@ -13,11 +13,11 @@ data "template_file" "ecrPolicy" {
 }
 
 resource "aws_ecs_cluster" "appECSCluster" {
-  name = "SpacedRepetition"
+  name = "${var.appName}"
 }
 
 resource "aws_ecs_service" "appECSService" {
-  name = "website"
+  name = "${var.appName}"
   task_definition = "${aws_ecs_task_definition.appECSTaskDefinition.arn}"
   desired_count = 1
   health_check_grace_period_seconds=300
@@ -25,7 +25,7 @@ resource "aws_ecs_service" "appECSService" {
 
   load_balancer = {
     target_group_arn = "${aws_lb_target_group.springBootContainer.arn}"
-    container_name = "spaced-repetition-spring-boot"
+    container_name = "${var.appName}-spring-boot"
     container_port = 8080
   }
 
@@ -46,7 +46,7 @@ resource "aws_ecs_service" "appECSService" {
 }
 
 resource "aws_ecs_task_definition" "appECSTaskDefinition" {
-  family = "SpacedRepetition"
+  family = "${var.appName}"
   container_definitions = "${data.template_file.containers.rendered}"
   network_mode = "awsvpc"
   execution_role_arn = "${aws_iam_role.executionRole.arn}"
@@ -56,11 +56,11 @@ resource "aws_ecs_task_definition" "appECSTaskDefinition" {
 }
 
 resource "aws_ecr_repository" "springBootECR" {
-  name = "spaced-repetition-spring-boot"
+  name = "${var.appName}-spring-boot"
 }
 
 resource "aws_ecr_repository" "mysqlECR" {
-  name = "spaced-repetition-mysql"
+  name = "${var.appName}-mysql"
 }
 
 resource "aws_ecr_repository_policy" "appECRPolicy" {

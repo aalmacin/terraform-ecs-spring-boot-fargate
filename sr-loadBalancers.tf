@@ -1,5 +1,5 @@
 resource "aws_lb" "appLoadBalancer" {
-  name               = "spacedRepetition"
+  name               = "${var.appName}"
   internal           = false
   load_balancer_type = "application"
   security_groups    = ["${aws_security_group.spacedRepetitionPublic.id}"]

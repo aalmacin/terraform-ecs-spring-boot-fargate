@@ -1,5 +1,5 @@
 resource "aws_acm_certificate" "appCert" {
-  domain_name = "spaced-repetition.raidrin.com"
+  domain_name = "${var.domain}"
   validation_method = "DNS"
   tags {
     Environment = "production"
@@ -7,7 +7,7 @@ resource "aws_acm_certificate" "appCert" {
 }
 
 resource "aws_route53_zone" "appPublicZone" {
-  name = "spaced-repetition.raidrin.com"
+  name = "${var.domain}"
 }
 
 resource "aws_route53_record" "certificateRoute53Validation" {
