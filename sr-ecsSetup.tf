@@ -4,7 +4,7 @@ data "template_file" "containers" {
   vars {
     "springBootECR" = "${aws_ecr_repository.springBootECR.repository_url}"
     "springBootMysqlECR" = "${aws_ecr_repository.mysqlECR.repository_url}"
-    "repositoryName" = "${var.appName}"
+    "repositoryName" = "${var.repoName}"
   }
 }
 
@@ -25,7 +25,7 @@ resource "aws_ecs_service" "appECSService" {
 
   load_balancer = {
     target_group_arn = "${aws_lb_target_group.springBootContainer.arn}"
-    container_name = "${var.appName}-spring-boot"
+    container_name = "${var.repoName}-spring-boot"
     container_port = 8080
   }
 
@@ -56,11 +56,11 @@ resource "aws_ecs_task_definition" "appECSTaskDefinition" {
 }
 
 resource "aws_ecr_repository" "springBootECR" {
-  name = "${var.appName}-spring-boot"
+  name = "${var.repoName}-spring-boot"
 }
 
 resource "aws_ecr_repository" "mysqlECR" {
-  name = "${var.appName}-mysql"
+  name = "${var.repoName}-mysql"
 }
 
 resource "aws_ecr_repository_policy" "appECRPolicy" {
