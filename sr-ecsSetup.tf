@@ -2,9 +2,13 @@ data "template_file" "containers" {
   template = "${file("appContainerDefinitions.json")}"
 
   vars {
-    "springBootECR" = "${aws_ecr_repository.spacedRepetitionECR.repository_url}"
-    "springBootMysqlECR" = "${aws_ecr_repository.spacedRepetitionMysqlECR.repository_url}"
+    "springBootECR" = "${aws_ecr_repository.springBootECR.repository_url}"
+    "springBootMysqlECR" = "${aws_ecr_repository.mysqlECR.repository_url}"
   }
+}
+
+data "template_file" "ecrPolicy" {
+  template = "${file("policies/ecrPolicy.json")}"
 }
 
 resource "aws_ecs_cluster" "spacedRepetitionECSCluster" {
@@ -50,84 +54,30 @@ resource "aws_ecs_task_definition" "spacedRepetitionTaskDefinition" {
   requires_compatibilities = ["FARGATE"]
 }
 
-output "ecr-spring-boot" {
-  value = "${aws_ecr_repository.spacedRepetitionECR.repository_url}"
-}
-
-output "ecr-mysql" {
-  value = "${aws_ecr_repository.spacedRepetitionMysqlECR.repository_url}"
-}
-
-resource "aws_ecr_repository" "spacedRepetitionECR" {
+resource "aws_ecr_repository" "springBootECR" {
   name = "spaced-repetition-spring-boot"
 }
 
-resource "aws_ecr_repository" "spacedRepetitionMysqlECR" {
+resource "aws_ecr_repository" "mysqlECR" {
   name = "spaced-repetition-mysql"
 }
 
 resource "aws_ecr_repository_policy" "spacedRepetitionECRPolicy" {
-  repository = "${aws_ecr_repository.spacedRepetitionECR.name}"
+  repository = "${aws_ecr_repository.springBootECR.name}"
 
-  policy = <<EOF
-{
-    "Version": "2008-10-17",
-    "Statement": [
-        {
-            "Sid": "new policy",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": [
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:PutImage",
-                "ecr:InitiateLayerUpload",
-                "ecr:UploadLayerPart",
-                "ecr:CompleteLayerUpload",
-                "ecr:DescribeRepositories",
-                "ecr:GetRepositoryPolicy",
-                "ecr:ListImages",
-                "ecr:DeleteRepository",
-                "ecr:BatchDeleteImage",
-                "ecr:SetRepositoryPolicy",
-                "ecr:DeleteRepositoryPolicy"
-            ]
-        }
-    ]
-}
-EOF
+  policy = "${data.template_file.ecrPolicy.rendered}"
 }
 
 resource "aws_ecr_repository_policy" "spacedRepetitionMysqlECRPolicy" {
-  repository = "${aws_ecr_repository.spacedRepetitionMysqlECR.name}"
+  repository = "${aws_ecr_repository.mysqlECR.name}"
 
-  policy = <<EOF
-{
-    "Version": "2008-10-17",
-    "Statement": [
-        {
-            "Sid": "new policy",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": [
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:PutImage",
-                "ecr:InitiateLayerUpload",
-                "ecr:UploadLayerPart",
-                "ecr:CompleteLayerUpload",
-                "ecr:DescribeRepositories",
-                "ecr:GetRepositoryPolicy",
-                "ecr:ListImages",
-                "ecr:DeleteRepository",
-                "ecr:BatchDeleteImage",
-                "ecr:SetRepositoryPolicy",
-                "ecr:DeleteRepositoryPolicy"
-            ]
-        }
-    ]
+  policy = "${data.template_file.ecrPolicy.rendered}"
 }
-EOF
+
+output "ecr-spring-boot" {
+  value = "${aws_ecr_repository.springBootECR.repository_url}"
+}
+
+output "ecr-mysql" {
+  value = "${aws_ecr_repository.mysqlECR.repository_url}"
 }
