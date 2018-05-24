@@ -1,5 +1,5 @@
 data "template_file" "containers" {
-  template = "${file("appContainerDefinitions.json")}"
+  template = "/${var.component}/${var.deployment_identifier}/terraform-fargate/${file("appContainerDefinitions.json")}"
 
   vars {
     "springBootECR" = "${aws_ecr_repository.springBootECR.repository_url}"
@@ -9,7 +9,7 @@ data "template_file" "containers" {
 }
 
 data "template_file" "ecrPolicy" {
-  template = "${file("policies/ecrPolicy.json")}"
+  template = "/${var.component}/${var.deployment_identifier}/terraform-fargate/${file("policies/ecrPolicy.json")}"
 }
 
 resource "aws_ecs_cluster" "appECSCluster" {
