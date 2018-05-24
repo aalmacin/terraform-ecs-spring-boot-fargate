@@ -4,6 +4,7 @@ data "template_file" "containers" {
   vars {
     "springBootECR" = "${aws_ecr_repository.springBootECR.repository_url}"
     "springBootMysqlECR" = "${aws_ecr_repository.mysqlECR.repository_url}"
+    "repositoryName" = "spacedRepetition"
   }
 }
 
@@ -11,16 +12,16 @@ data "template_file" "ecrPolicy" {
   template = "${file("policies/ecrPolicy.json")}"
 }
 
-resource "aws_ecs_cluster" "spacedRepetitionECSCluster" {
+resource "aws_ecs_cluster" "appECSCluster" {
   name = "SpacedRepetition"
 }
 
-resource "aws_ecs_service" "spacedRepetitionService" {
+resource "aws_ecs_service" "appECSService" {
   name = "website"
-  task_definition = "${aws_ecs_task_definition.spacedRepetitionTaskDefinition.arn}"
+  task_definition = "${aws_ecs_task_definition.appECSTaskDefinition.arn}"
   desired_count = 1
   health_check_grace_period_seconds=300
-  cluster = "${aws_ecs_cluster.spacedRepetitionECSCluster.arn}"
+  cluster = "${aws_ecs_cluster.appECSCluster.arn}"
 
   load_balancer = {
     target_group_arn = "${aws_lb_target_group.springBootContainer.arn}"
@@ -39,12 +40,12 @@ resource "aws_ecs_service" "spacedRepetitionService" {
 	]
 
   depends_on = [
-    "aws_lb_listener.spacedRepetitionSiteHttpListener",
-    "aws_lb_listener.spacedRepetitionSiteHttpsListener"
+    "aws_lb_listener.appHttpListener",
+    "aws_lb_listener.appHttpsListener"
   ]
 }
 
-resource "aws_ecs_task_definition" "spacedRepetitionTaskDefinition" {
+resource "aws_ecs_task_definition" "appECSTaskDefinition" {
   family = "SpacedRepetition"
   container_definitions = "${data.template_file.containers.rendered}"
   network_mode = "awsvpc"
@@ -62,13 +63,13 @@ resource "aws_ecr_repository" "mysqlECR" {
   name = "spaced-repetition-mysql"
 }
 
-resource "aws_ecr_repository_policy" "spacedRepetitionECRPolicy" {
+resource "aws_ecr_repository_policy" "appECRPolicy" {
   repository = "${aws_ecr_repository.springBootECR.name}"
 
   policy = "${data.template_file.ecrPolicy.rendered}"
 }
 
-resource "aws_ecr_repository_policy" "spacedRepetitionMysqlECRPolicy" {
+resource "aws_ecr_repository_policy" "appMysqlECRPolicy" {
   repository = "${aws_ecr_repository.mysqlECR.name}"
 
   policy = "${data.template_file.ecrPolicy.rendered}"

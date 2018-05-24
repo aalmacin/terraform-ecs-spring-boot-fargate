@@ -1,6 +1,6 @@
 [
   {
-    "name": "spaced-repetition-spring-boot",
+    "name": "${repositoryName}-spring-boot",
     "image": "${springBootECR}",
     "cpu" : 512,
     "memory" : 1024,
@@ -14,7 +14,7 @@
     ]
   },
   {
-    "name": "spaced-repetition-mysql",
+    "name": "${repositoryName}-mysql",
     "image": "${springBootMysqlECR}",
     "cpu" : 512,
     "memory" : 1024,

@@ -1,4 +1,4 @@
-resource "aws_lb" "spacedRepetitionLoadBalancer" {
+resource "aws_lb" "appLoadBalancer" {
   name               = "spacedRepetition"
   internal           = false
   load_balancer_type = "application"
@@ -19,8 +19,8 @@ resource "aws_lb_target_group" "springBootContainer" {
   target_type = "ip"
 }
 
-resource "aws_lb_listener" "spacedRepetitionSiteHttpListener" {
-  load_balancer_arn = "${aws_lb.spacedRepetitionLoadBalancer.arn}"
+resource "aws_lb_listener" "appHttpListener" {
+  load_balancer_arn = "${aws_lb.appLoadBalancer.arn}"
   port              = "80"
   protocol          = "HTTP"
 
@@ -30,8 +30,8 @@ resource "aws_lb_listener" "spacedRepetitionSiteHttpListener" {
   }
 }
 
-resource "aws_lb_listener" "spacedRepetitionSiteHttpsListener" {
-  load_balancer_arn = "${aws_lb.spacedRepetitionLoadBalancer.arn}"
+resource "aws_lb_listener" "appHttpsListener" {
+  load_balancer_arn = "${aws_lb.appLoadBalancer.arn}"
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2015-05"
