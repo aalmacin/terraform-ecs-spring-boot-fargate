@@ -33,8 +33,8 @@ resource "aws_ecs_service" "appECSService" {
   network_configuration = [
     {
       subnets = [
-        "${aws_subnet.spacedRepetitionSubnet.id}",
-        "${aws_subnet.spacedRepetitionSubnet2.id}"
+        "${aws_subnet.appSubnet.id}",
+        "${aws_subnet.appSubnet2.id}"
       ]
     }
 	]

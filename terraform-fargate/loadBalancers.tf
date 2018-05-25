@@ -2,8 +2,8 @@ resource "aws_lb" "appLoadBalancer" {
   name               = "${var.appName}"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = ["${aws_security_group.spacedRepetitionPublic.id}"]
-  subnets            = ["${aws_subnet.spacedRepetitionSubnet.id}", "${aws_subnet.spacedRepetitionSubnet2.id}"]
+  security_groups    = ["${aws_security_group.appPublic.id}"]
+  subnets            = ["${aws_subnet.appSubnet.id}", "${aws_subnet.appSubnet2.id}"]
 
   enable_deletion_protection = false
 
@@ -15,7 +15,7 @@ resource "aws_lb" "appLoadBalancer" {
 resource "aws_lb_target_group" "springBootContainer" {
   port = 8080
   protocol = "HTTP"
-  vpc_id = "${aws_vpc.spacedRepetition.id}"
+  vpc_id = "${aws_vpc.app.id}"
   target_type = "ip"
 }
 

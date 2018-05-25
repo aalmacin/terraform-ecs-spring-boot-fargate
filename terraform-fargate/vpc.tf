@@ -1,21 +1,21 @@
-resource "aws_vpc" "spacedRepetition" {
+resource "aws_vpc" "app" {
   cidr_block = "10.0.0.0/16"
 
   tags = {
-    Name = "Spaced Repetition"
+    Name = "${var.appName}"
   }
 }
 
 resource "aws_internet_gateway" "internetGateway" {
-  vpc_id = "${aws_vpc.spacedRepetition.id}"
+  vpc_id = "${aws_vpc.app.id}"
 
   tags {
     Name = "main"
   }
 }
 
-resource "aws_subnet" "spacedRepetitionSubnet2" {
-  vpc_id = "${aws_vpc.spacedRepetition.id}"
+resource "aws_subnet" "appSubnet2" {
+  vpc_id = "${aws_vpc.app.id}"
   availability_zone = "us-east-1b"
   cidr_block = "10.0.2.0/24"
 
@@ -24,8 +24,8 @@ resource "aws_subnet" "spacedRepetitionSubnet2" {
   }
 }
 
-resource "aws_subnet" "spacedRepetitionSubnet" {
-  vpc_id = "${aws_vpc.spacedRepetition.id}"
+resource "aws_subnet" "appSubnet" {
+  vpc_id = "${aws_vpc.app.id}"
   availability_zone = "us-east-1a"
   cidr_block = "10.0.1.0/24"
 
@@ -34,10 +34,10 @@ resource "aws_subnet" "spacedRepetitionSubnet" {
   }
 }
 
-resource "aws_security_group" "spacedRepetitionPublic" {
+resource "aws_security_group" "appPublic" {
   name = "Public"
   description = "Allow inbound traffic"
-  vpc_id = "${aws_vpc.spacedRepetition.id}"
+  vpc_id = "${aws_vpc.app.id}"
 
   ingress {
     from_port = 0
