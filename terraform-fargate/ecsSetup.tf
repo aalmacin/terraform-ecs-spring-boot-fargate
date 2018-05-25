@@ -33,8 +33,8 @@ resource "aws_ecs_service" "appECSService" {
   network_configuration = [
     {
       subnets = [
-        "${aws_subnet.appSubnet.id}",
-        "${aws_subnet.appSubnet2.id}"
+        "${var.appSubnetId}",
+        "${var.appSubnetId2}"
       ]
     }
 	]
@@ -49,7 +49,7 @@ resource "aws_ecs_task_definition" "appECSTaskDefinition" {
   family = "${var.appName}"
   container_definitions = "${data.template_file.containers.rendered}"
   network_mode = "awsvpc"
-  execution_role_arn = "${aws_iam_role.executionRole.arn}"
+  execution_role_arn = "${var.executionRoleArn}"
   cpu = 1024
   memory = 2048
   requires_compatibilities = ["FARGATE"]
