@@ -3,7 +3,7 @@ data "template_file" "containers" {
 
   vars {
     "springBootECR" = "${aws_ecr_repository.springBootECR.repository_url}"
-    "springBootMysqlECR" = "${aws_ecr_repository.mysqlECR.repository_url}"
+    "springBootMysqlECR" = "mysql:5.7"
     "repositoryName" = "${var.repoName}"
   }
 }
