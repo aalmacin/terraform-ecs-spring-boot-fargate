@@ -36,6 +36,8 @@ resource "aws_ecs_service" "appECSService" {
         "${var.appSubnetId}",
         "${var.appSubnetId2}"
       ]
+      security_groups = ["${var.appPublicSecurityGroupId}"]
+      assign_public_ip = true
     }
 	]
 
