@@ -1,9 +1,9 @@
 data "template_file" "iamHostRolePolicy" {
-	template = "/${var.component}/${var.deployment_identifier}/terraform-fargate/${file("./policies/iamHostRolePolicy.json")}"
+	template = "${file("${path.module}/policies/iamHostRolePolicy.json")}"
 }
 
 data "template_file" "iamInstanceRolePolicy" {
-	template = "/${var.component}/${var.deployment_identifier}/terraform-fargate/${file("./policies/iamInstanceRolePolicy.json")}"
+	template = "${file("${path.module}/policies/iamInstanceRolePolicy.json")}"
 }
 
 resource "aws_iam_role" "executionRole" {
